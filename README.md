@@ -1,5 +1,5 @@
 ## Classificador de Séries Temporais de Sinais de Libras
 
-###Autores:
+### Autores:
 
 Descrição do Projeto...
