@@ -229,7 +229,7 @@ def evaluation(individual, series, epocas):
 
     results = []
     indices, dados_Y, lista = return_labels(series)
-    for k in range (0, 1):
+    for k in range (0, 3):
         # 75% treino - 25% teste
         (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
         X_train, y_train = generate_train(train_X, series, lista)
