@@ -419,7 +419,7 @@ def genetic(ngen, npop, pcruz, pmut, dataset, epocas):
         
         h1, = pl.plot(melhor_acc, c='blue', label='Best ACC')
         h2, = pl.plot(media_acc, c='cyan', label='Mean ACC')
-        pl.title("acc")
+        pl.title("ACC")
         pl.legend([h1, h2],['Best','Mean'])
 
         pl.subplot(122)
