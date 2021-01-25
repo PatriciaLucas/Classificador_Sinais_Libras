@@ -308,7 +308,6 @@ def crossover_CNN(pais):
         k = 5
     else:
         k = 11
-    lags = random.randint((2**num_conv)*k,(2**num_conv)*k*pilhas)
     
     acc = []
     num_param = []
@@ -337,7 +336,6 @@ def mutation_CNN(individual):
         kernel_size = 5
     else:
         kernel_size = 11
-    individual['lags'] = random.randint((2**individual['num_conv'])*kernel_size,(2**individual['num_conv'])*kernel_size*individual['pilhas'])
   
     return individual
 
