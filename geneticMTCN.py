@@ -205,7 +205,7 @@ def modelo_CNN(X_train, y_train, X_test, y_test, individual,epocas):
     
     model = compiled_tcn(return_sequences=False, num_feat=150, num_classes=20, nb_filters=filters, kernel_size=kernel_size, dilations=d,
                          padding='causal', dropout_rate=individual['dropout'], use_batch_norm=True, nb_stacks=individual['pilhas'], max_len=X_train[0:1].shape[1],
-                         use_skip_connections=True)
+                         use_skip_connections=False)
     y_train = y_train.squeeze().argmax(axis=1)
     y_test = y_test.squeeze().argmax(axis=1)
     history = model.fit(X_train, y_train, epochs=epocas,validation_data=(X_test, y_test), callbacks = call, verbose=0)    
