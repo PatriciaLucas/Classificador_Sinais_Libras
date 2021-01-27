@@ -73,13 +73,13 @@ def generate_train(train_X, matriz_path, lista):
       mat = np.load(matriz_path + '/' + matriz)
       #mat = scaler.fit_transform(mat)
       #mat = stats.zscore(mat)
-      one_channel = np.stack((mat,)*1, axis=-1)
+      #one_channel = np.stack((mat,)*1, axis=-1)
       label = ''.join(i for i in matriz if not i.isdigit()) #Exemplo: '-Maca_.npy'
       label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
       label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
       label = label.replace('.npy', '') #Exemplo: 'Maca'
       labels.append(label)
-      data.append(one_channel)
+      data.append(mat)
           
     x_train = np.array(data, dtype = 'float32')
     lb = LabelBinarizer()
@@ -104,13 +104,13 @@ def generate_test(test_X, matriz_path, lista):
       mat = np.load(matriz_path + '/' + matriz)
       #mat = scaler.fit_transform(mat)
       #mat = stats.zscore(mat)
-      one_channel_video = np.stack((mat,)*1, axis=-1)
+      #one_channel_video = np.stack((mat,)*1, axis=-1)
       label = ''.join(i for i in matriz if not i.isdigit()) #Exemplo: '-Maca_.npy'
       label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
       label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
       label = label.replace('.npy', '') #Exemplo: 'Maca'
       labels.append(label)
-      data.append(one_channel_video)
+      data.append(mat)
           
     x_test = np.array(data, dtype = 'float32')
     lb = LabelBinarizer()
