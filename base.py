@@ -3,7 +3,58 @@ import re
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 import numpy as np
+import pandas as pd
 
+
+def processing_data(path_data, path_save):
+  for sinalizador in sinalizadores:
+    num_sinalizador = sinalizadores.index(sinalizador)+1
+    for sinal in sinais:
+      for gravacao in gravacoes:
+        arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
+        arquivo2 = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Face.txt'
+        
+        dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
+        dadosBody = pd.DataFrame.transpose(dadosBody)
+        dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
+        dadosBody10 = dadosBody17.drop(dadosBody17.index[[0,1,2,3,4,8,12]]) # excluindo pontos que nao apresentaram movimento durante a execucao dos sinais
+
+        with open(arquivo2, 'r') as f1:
+          var_names = f1.readlines() 
+          var_names = map(lambda s: s.strip(), var_names)
+          var_names = map(lambda line: line.rstrip('\n'), var_names)
+          var_names = map(lambda line: line.split(), var_names)
+        dadosFace = pd.DataFrame(var_names)
+        dadosFace = pd.DataFrame.transpose(dadosFace.astype(float))
+
+        # pegando os valores de x e y
+        x = pd.DataFrame()
+        y = pd.DataFrame()
+        j=0
+        for i in range(0, 1950,13):
+          x = pd.concat([x, dadosBody10[i]-dadosFace[2+j*11][0]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]-dadosFace[2+j*11][1]], axis=1)
+          j+=1
+
+        # ordenando os índices dos dataframes
+        order1 = x.reset_index()
+        order1 = order1.drop(columns="index")
+        order2 = order1.T
+        order2 = order2.reset_index()
+        x = order2.drop(columns="index")
+        x = x.T
+
+        order1 = y.reset_index()
+        order1 = order1.drop(columns="index")
+        order2 = order1.T
+        order2 = order2.reset_index()
+        y = order2.drop(columns="index")
+        y = y.T
+
+        matriz = x.append(y) # matriz 20x150 com referência ao posicionamento da cabeca
+
+        np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
+  return matriz
 
 def return_labels(matriz_path):
   lista = []
