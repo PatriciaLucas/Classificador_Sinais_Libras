@@ -1,3 +1,10 @@
+import os
+import re
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer
+import numpy as np
+
+
 def return_labels(matriz_path):
   lista = []
   labels = []
