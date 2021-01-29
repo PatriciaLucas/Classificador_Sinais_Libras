@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 
-def processing_data(path_data, path_save):
+def processing_data(sinais, sinalizadores, gravacoes, path_data, path_save):
   for sinalizador in sinalizadores:
     num_sinalizador = sinalizadores.index(sinalizador)+1
     for sinal in sinais:
