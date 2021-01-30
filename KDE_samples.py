@@ -37,7 +37,7 @@ def samples(X, Y):
         point = matrix_group[:,j,i]
         #band = grid(point)
         kde_point = KernelDensity(kernel='gaussian', bandwidth=0.11).fit(point.reshape((-1,1)))
-        point_mean[0,j,i] = ((kde_point.sample(1)).mean())
+        point_mean[0,j,i] = ((kde_point.sample(1000)).mean())
     X_new = np.concatenate((X_new, point_mean), axis=0)
     Y_new = np.concatenate((Y_new, classe_point), axis=0)
   return X_new, Y_new
