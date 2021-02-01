@@ -5,6 +5,9 @@ from sklearn.preprocessing import LabelBinarizer
 import numpy as np
 import pandas as pd
 
+def processing_marcosdata(x):
+  return print(x)
+
 def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
   for sinalizador in sinalizadores:
     num_sinalizador = sinalizadores.index(sinalizador)+1
