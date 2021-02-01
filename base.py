@@ -22,8 +22,8 @@ def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
         y = pd.DataFrame()
         j=0
         for i in range(0, 1950,13):
-          x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1)
-          y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
+          x = pd.concat([x, dadosBody10[i]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]], axis=1)
           j+=1
 
         # ordenando os índices dos dataframes
@@ -63,8 +63,8 @@ def processing_relationdata(sinais, sinalizadores, gravacoes, path_data, path_sa
         y = pd.DataFrame()
         j=0
         for i in range(0, 1950,13):
-          x = pd.concat([x, dadosBody10[i]-0.5], axis=1)
-          y = pd.concat([y, dadosBody10[i+1]-0.5], axis=1)
+          x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
           j+=1
 
         # ordenando os índices dos dataframes
