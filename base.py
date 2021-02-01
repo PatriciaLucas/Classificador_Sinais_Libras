@@ -46,7 +46,7 @@ def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
-def processing_data(sinais, sinalizadores, gravacoes, path_data, path_save):
+def processing_relationdata(sinais, sinalizadores, gravacoes, path_data, path_save):
   for sinalizador in sinalizadores:
     num_sinalizador = sinalizadores.index(sinalizador)+1
     for sinal in sinais:
