@@ -5,9 +5,6 @@ from sklearn.preprocessing import LabelBinarizer
 import numpy as np
 import pandas as pd
 
-def processing_marcosdata(x):
-  return print(x)
-
 def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
   for sinalizador in sinalizadores:
     num_sinalizador = sinalizadores.index(sinalizador)+1
@@ -25,8 +22,8 @@ def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
         y = pd.DataFrame()
         j=0
         for i in range(0, 1950,13):
-          x = pd.concat([x, dadosBody10[i]], axis=1)
-          y = pd.concat([y, dadosBody10[i+1]], axis=1)
+          x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
           j+=1
 
         # ordenando os índices dos dataframes
