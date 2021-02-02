@@ -66,7 +66,7 @@ def modelo_CNN(X_train, y_train, individual, epocas):
     :return: o modelo
     """
     warnings.filterwarnings('ignore')
-    call = [EarlyStopping(monitor='loss', mode='min', patience=15, verbose=1),]
+    call = [EarlyStopping(monitor='loss', mode='min', patience=15, verbose=0),]
     if individual['filters'] == 0: 
         filters = 16
     elif individual['filters'] == 1:
@@ -95,7 +95,7 @@ def modelo_CNN(X_train, y_train, individual, epocas):
     model = compiled_tcn(return_sequences=False, num_feat=150, num_classes=20, nb_filters=filters, kernel_size=kernel_size, dilations=d,
                          padding='causal', dropout_rate=individual['dropout'], use_batch_norm=True, nb_stacks=individual['pilhas'], max_len=X_train[0:1].shape[1],
                          use_skip_connections=False)
-    history = model.fit(X_train, y_train, epochs=epocas, callbacks = call, verbose=1)    
+    history = model.fit(X_train, y_train, epochs=epocas, callbacks = call, verbose=0)    
   
     return model, history
 
