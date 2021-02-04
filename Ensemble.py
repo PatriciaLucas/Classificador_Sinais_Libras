@@ -140,5 +140,8 @@ def evaluate(yhats, y_test):
     yhat_ensemble = stats.mode(array_yhats, axis=0)
     print(yhat_ensemble[0].reshape((-1,1)).shape)
     accuracy = accuracy_score(yhat_ensemble[0].reshape((-1,1)), y_test)
-    confusion = confusion_matrix(yhat_ensemble[0].reshape((-1,1)), y_test)
-    return accuracy, confusion
+    tn, fp, fn, tp = confusion_matrix(yhat_ensemble[0].reshape((-1,1)), y_test)
+    precision = tp/(tp+fp)
+    recall = tp/(tp+fn)
+    F1 = 2 * ((precision*recall) / (precision + recall))
+    return accuracy, precision, recall, F1
