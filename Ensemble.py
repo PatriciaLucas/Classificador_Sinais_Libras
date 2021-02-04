@@ -136,9 +136,7 @@ def evaluate(yhats, y_test):
     :return: rmse da previsão do ensemble e os valores previstos pelo ensemble
     """
     array_yhats = np.asarray(yhats)
-    print(array_yhats.shape)
     yhat_ensemble = stats.mode(array_yhats, axis=0)
-    print(yhat_ensemble[0].reshape((-1,1)).shape)
     accuracy = accuracy_score(yhat_ensemble[0].reshape((-1,1)), y_test)
     tn, fp, fn, tp = confusion_matrix(yhat_ensemble[0].reshape((-1,1)), y_test)
     precision = tp/(tp+fp)
