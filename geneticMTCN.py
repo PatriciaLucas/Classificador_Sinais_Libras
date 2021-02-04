@@ -265,7 +265,7 @@ def selection(population):
     pai1 = tournament(population, 'acc')
     pai2 = tournament(population, 'acc')
 
-    finalista = tournament([pai1, pai2], 'num_param')
+    finalista = tournament([pai1, pai2], 'acc')
 
     return finalista
 
