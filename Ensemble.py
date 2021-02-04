@@ -6,7 +6,7 @@ from scipy import stats
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 import tensorflow as tf
 from tensorflow import keras
