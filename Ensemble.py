@@ -141,4 +141,4 @@ def evaluate(yhats, y_test):
     precision = precision_score(y_test, yhat_ensemble[0].reshape((-1,1)), average='macro')
     recall = recall_score(y_test, yhat_ensemble[0].reshape((-1,1)), average='macro')
     f1 = f1_score(y_test, yhat_ensemble[0].reshape((-1,1)), average='macro')
-    return accuracy, precision, recall, F1
+    return accuracy, precision, recall, f1
