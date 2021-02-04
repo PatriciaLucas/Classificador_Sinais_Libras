@@ -235,7 +235,7 @@ def evaluation(individual, series, epocas):
         X_train, y_train = generate_train(train_X, series, lista)
         X_test, y_test = generate_test(test_X, series, lista)
         model, history  = modelo_CNN(X_train, y_train, X_test, y_test, individual, epocas)
-        results.append(np.sqrt(history.history['val_accuracy'][-1]))
+        results.append(history.history['val_accuracy'][-1])
 
     acc = np.nanmean(results)
     num_param = model.count_params()
