@@ -180,6 +180,6 @@ def generate_train_test_DA(matrix_path1,matrix_path2):
   
   X_train = X_train1.append(X_train2)
   y_train = y_train1.append(y_train2)
-  X_test = X_ttest1.append(X_test2)
-  y_test = y_ttest1.append(y_test2)
+  X_test = X_test1.append(X_test2)
+  y_test = y_test1.append(y_test2)
   return X_train, y_train, X_test, y_test
