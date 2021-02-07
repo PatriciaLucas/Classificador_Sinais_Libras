@@ -175,8 +175,8 @@ def generate_train_test_DA(matrix_path1,matrix_path2):
 
   indices, dados_Y, lista = return_labels(matrix_path2)
   (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
-  X_train2, y_train2 = generate_train(train_X, matrix_path1, lista)
-  X_test2, y_test2 = generate_test(test_X, matrix_path1, lista)
+  X_train2, y_train2 = generate_train(train_X, matrix_path2, lista)
+  X_test2, y_test2 = generate_test(test_X, matrix_path2, lista)
   
   X_train = X_train1.append(X_train2)
   y_train = y_train1.append(y_train2)
