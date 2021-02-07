@@ -104,6 +104,33 @@ def return_labels(matriz_path):
   indices = range(len(labels))
   return indices, dados_Y, lista
 
+def return_labels_DA(matriz_path1,matriz_path2):
+  lista = []
+  labels = []
+  
+  matrizPaths = os.listdir(matriz_path1) #nome dos arquivos
+  for matrix in matrizPaths: #Exemplo: '10-15Maca_3.npy'
+    label = ''.join(i for i in matrix if not i.isdigit()) #Exemplo: '-Maca_.npy'
+    label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
+    label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
+    label = label.replace('.npy', '') #Exemplo: 'Maca'
+    labels.append(label) #adiciona o item no final da lista
+    lista.append(matrix)
+  
+  matrizPaths = os.listdir(matriz_path2) #nome dos arquivos
+  for matrix in matrizPaths: #Exemplo: '10-15Maca_3.npy'
+    label = ''.join(i for i in matrix if not i.isdigit()) #Exemplo: '-Maca_.npy'
+    label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
+    label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
+    label = label.replace('.npy', '') #Exemplo: 'Maca'
+    labels.append(label) #adiciona o item no final da lista
+    lista.append(matrix)
+
+  lb = LabelBinarizer()
+  dados_Y = lb.fit_transform(labels)
+  indices = range(len(labels))
+  return indices, dados_Y, lista
+
 def generate_train(train_X, matriz_path, lista):
     """
     Gera dados de treino para a CNN4
@@ -162,6 +189,13 @@ def generate_test(test_X, matriz_path, lista):
 
 def generate_train_test(matrix_path):
   indices, dados_Y, lista = return_labels(matrix_path)
+  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
+  X_train, y_train = generate_train(train_X, matrix_path, lista)
+  X_test, y_test = generate_test(test_X, matrix_path, lista)
+  return X_train, y_train, X_test, y_test
+
+def generate_train_test_DA(matrix_path1,matrix_path2):
+  indices, dados_Y, lista = return_labels_DA(matrix_path1,matrix_path2)
   (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
   X_train, y_train = generate_train(train_X, matrix_path, lista)
   X_test, y_test = generate_test(test_X, matrix_path, lista)
