@@ -166,3 +166,10 @@ def generate_train_test(matrix_path):
   X_train, y_train = generate_train(train_X, matrix_path, lista)
   X_test, y_test = generate_test(test_X, matrix_path, lista)
   return X_train, y_train, X_test, y_test
+
+def generate_train_test_random(matrix_path):
+  indices, dados_Y, lista = return_labels(matrix_path)
+  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,test_size=0.25,stratify=dados_Y)
+  X_train, y_train = generate_train(train_X, matrix_path, lista)
+  X_test, y_test = generate_test(test_X, matrix_path, lista)
+  return X_train, y_train, X_test, y_test
