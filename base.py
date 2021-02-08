@@ -166,20 +166,3 @@ def generate_train_test(matrix_path):
   X_train, y_train = generate_train(train_X, matrix_path, lista)
   X_test, y_test = generate_test(test_X, matrix_path, lista)
   return X_train, y_train, X_test, y_test
-
-def generate_train_test_DA(matrix_path1,matrix_path2):
-  indices, dados_Y, lista = return_labels(matrix_path1)
-  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
-  X_train1, y_train1 = generate_train(train_X, matrix_path1, lista)
-  X_test1, y_test1 = generate_test(test_X, matrix_path1, lista)
-
-  indices, dados_Y, lista = return_labels(matrix_path2)
-  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
-  X_train2, y_train2 = generate_train(train_X, matrix_path2, lista)
-  X_test2, y_test2 = generate_test(test_X, matrix_path2, lista)
-  
-  X_train = X_train1.append(X_train2)
-  y_train = y_train1.append(y_train2)
-  X_test = X_test1.append(X_test2)
-  y_test = y_test1.append(y_test2)
-  return X_train, y_train, X_test, y_test
