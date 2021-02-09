@@ -160,6 +160,42 @@ def generate_test(test_X, matriz_path, lista):
     y_test = y_test.squeeze().argmax(axis=1)
     return x_test, y_test
 
+def rolling_average(matrix, lag):
+  """
+  Gera amostras de série temporais multivariadas usando Média Móvel
+  :parametro matrix_x: matriz com todas as séries multivariadas
+  :parametro lag: número de atrasos usados para a média móvel
+  :return: série multivariadas suavizadas pela média móvel, índices das classes da nova matriz
+  """
+  sample = np.zeros((20, 150))
+  matrix_samples = matrix
+  for point in range(matrix.shape[0]):
+      dataset = pd.DataFrame({'Point':matrix[point][:]})
+      #dataset.index = pd.to_datetime(dataset.index)
+      rolling = dataset.rolling(window=lag)
+      rolling_mean = rolling.mean()
+      for i in range(lag-1):
+        rolling_mean['Point'][i] = dataset['Point'][i]
+      rolling_mean_array = rolling_mean.to_numpy()
+      rolling_mean_array = np.reshape(rolling_mean_array, (-1, 150))
+      sample[point] = rolling_mean_array
+
+  return sample
+
+
+def generate_samples(matrix, lag):
+  """
+  Chama a função que gera amostras sintéticas de sinais de libras com média móvel
+  :parametro matrix_x: matriz com todas as séries multivariadas
+  :parametro lag: número de atrasos usados para a média móvel
+  :return: matriz numpy com séries multivariadas suavizadas pela média móvel
+  """
+  new_matrix = np.zeros((matrix.shape[0],matrix.shape[1], matrix.shape[2]))
+  for sample in range(matrix.shape[0]):
+    new_sample = rolling_average(matrix[sample,:,:], lag).reshape(-1,20,150)
+    new_matrix[sample] = new_sample
+  return new_matrix
+
 def generate_train_test(matrix_path):
   indices, dados_Y, lista = return_labels(matrix_path)
   (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
