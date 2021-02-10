@@ -8,8 +8,10 @@ import pandas as pd
 def return_labels(matriz_path):
   lista = []
   labels = []
+  numsinalizadores = []
   matrizPaths = os.listdir(matriz_path) #nome dos arquivos
   for matrix in matrizPaths: #Exemplo: '10-15Maca_3.npy'
+    numsinalizadores.append(matrix.split('-')[0])
     label = ''.join(i for i in matrix if not i.isdigit()) #Exemplo: '-Maca_.npy'
     label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
     label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
@@ -20,7 +22,7 @@ def return_labels(matriz_path):
   lb = LabelBinarizer()
   dados_Y = lb.fit_transform(labels)
   indices = range(len(labels))
-  return indices, dados_Y, lista
+  return numsinalizadores, indices, dados_Y, lista
 
 def generate(X, matriz_path, lista):
     """
@@ -51,8 +53,8 @@ def generate(X, matriz_path, lista):
     return x_train, y_train
 
 def generate_train_test(matrix_path):
-  indices, dados_Y, lista = return_labels(matrix_path)
-  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=0.25,stratify=dados_Y)
+  numsinalizadores, indices, dados_Y, lista = return_labels(matrix_path)
+  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=100,stratify=dados_Y)
   X_train, y_train = generate(train_X, matrix_path, lista)
   X_test, y_test = generate(test_X, matrix_path, lista)
   return X_train, y_train, X_test, y_test
