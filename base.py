@@ -133,7 +133,7 @@ def processing_smoothingdata(matriz_path, path_save, lag):
   dados = []
   for mat in matrizPaths:
     matrix = np.load(matriz_path + '/' + mat)
-    new_sample = rolling_average(matrix, lag).reshape(-1,20,150)
+    new_sample = rolling_average(matrix, lag)
     np.save(path_save + '/' + mat, new_sample)
     dados.append(new_sample)
     
