@@ -1,7 +1,3 @@
-import os
-import re
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelBinarizer
 import numpy as np
 import pandas as pd
 
@@ -146,9 +142,3 @@ def rolling_average(matrix, lag):
 
   return sample
 
-def generate_train_test_random(matrix_path):
-  indices, dados_Y, lista = return_labels(matrix_path)
-  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,test_size=0.25,stratify=dados_Y)
-  X_train, y_train = generate(train_X, matrix_path, lista)
-  X_test, y_test = generate(test_X, matrix_path, lista)
-  return X_train, y_train, X_test, y_test
