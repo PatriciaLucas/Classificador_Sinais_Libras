@@ -120,7 +120,7 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
-def generate_samples(matriz_path, lag):
+def processing_smoothingdata(matriz_path, lag):
   """
   Chama a função que gera amostras sintéticas de sinais de libras com média móvel
   :parametro matriz_path: caminho das matrizes com todas as séries multivariadas
@@ -129,7 +129,7 @@ def generate_samples(matriz_path, lag):
   """
 
   matrizPaths = os.listdir(matriz_path)
-  data = []
+  matrix = []
   for mat in matrizPaths:
     matrix.append(np.load(matriz_path + '/' + mat))
 
