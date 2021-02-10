@@ -52,9 +52,37 @@ def generate(X, matriz_path, lista):
     y_train = y_train.squeeze().argmax(axis=1)
     return x_train, y_train
 
-def generate_train_test(matrix_path):
-  numsinalizadores, indices, dados_Y, lista = return_labels(matrix_path)
-  (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,random_state=42,test_size=100,stratify=dados_Y)
-  X_train, y_train = generate(train_X, matrix_path, lista)
-  X_test, y_test = generate(test_X, matrix_path, lista)
-  return X_train, y_train, X_test, y_test
+def generate_train_test(matrix_path,numsinalizador):
+  datatest = []
+  labeltest = []
+  datatrain = []
+  labeltrain = []
+
+  matrizPaths = os.listdir(matriz_path) #nome dos arquivos
+  for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
+    mat = np.load(matriz_path + '/' + matriz)
+    label = ''.join(i for i in matriz if not i.isdigit()) #Exemplo: '-Maca_.npy'
+    label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
+    label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
+    label = label.replace('.npy', '') #Exemplo: 'Maca'
+    
+    if (matriz.split('-')[0] == numsinalizador): 
+      labeltest.append(label)
+      datatest.append(mat)
+    else:    
+      labeltrain.append(label)
+      datatrain.append(mat)
+
+  lb = LabelBinarizer()
+  y_train = lb.fit_transform(labeltrain)
+  y_train = np.stack((y_train,)*1, axis=-1)
+  y_train = y_train.squeeze().argmax(axis=1)
+
+  y_test = lb.fit_transform(labeltest)
+  y_test = np.stack((y_test,)*1, axis=-1)
+  y_test = y_test.squeeze().argmax(axis=1)
+
+  x_train = np.array(datatrain, dtype = 'float32')
+  x_test = np.array(datatest, dtype = 'float32')
+
+  return x_train, y_train, x_test, y_test
