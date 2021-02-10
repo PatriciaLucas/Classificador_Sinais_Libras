@@ -119,6 +119,19 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
+def generate_samples(matrix, lag):
+  """
+  Chama a função que gera amostras sintéticas de sinais de libras com média móvel
+  :parametro matrix_x: matriz com todas as séries multivariadas
+  :parametro lag: número de atrasos usados para a média móvel
+  :return: matriz numpy com séries multivariadas suavizadas pela média móvel
+  """
+  new_matrix = np.zeros((matrix.shape[0],matrix.shape[1], matrix.shape[2]))
+  for sample in range(matrix.shape[0]):
+    new_sample = rolling_average(matrix[sample,:,:], lag).reshape(-1,20,150)
+    new_matrix[sample] = new_sample
+  return new_matrix
+
 
 def rolling_average(matrix, lag):
   """
