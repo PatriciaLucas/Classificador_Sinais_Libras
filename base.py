@@ -112,7 +112,7 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
         for i in range(0, 1950,13):
           # np.random.normal(loc=dadosBody[i][3], scale=0.05, size=1): loc=valor médio, scale=desviopadrao, size=numero de pontos
           x = pd.concat([x, dadosBody10[i]-(dadosBody[i][3]+np.random.normal(loc=dadosBody[i][3], scale=0.05, size=1))], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
-          y = pd.concat([y, dadosBody10[i+1]-(dadosBody[i+1][3]np.random.normal(loc=dadosBody[i+1][3], scale=0.05, size=1))], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]-(dadosBody[i+1][3]+np.random.normal(loc=dadosBody[i+1][3], scale=0.05, size=1))], axis=1)
           j+=1
 
         matriz = order(x,y)
