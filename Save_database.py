@@ -28,3 +28,40 @@ def execute(sql,database_path):
             with contextlib.closing(conn.cursor()) as cursor: # auto-closes
                 cursor.execute(sql)
                 return cursor.fetchall()
+
+def concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2):
+  X_train = np.concatenate((X_train1, X_train2), axis=0)
+  y_train = np.concatenate((y_train1,y_train2), axis=0)
+  X_test = np.concatenate((X_test1,X_test2), axis=0)
+  y_test = np.concatenate((y_test1,y_test2), axis=0)
+  return X_train, y_train, X_test, y_test
+
+def sliding_window(list_dataset, sinalizador, window):
+  #list_del = list_dataset
+  X_train1, y_train1, X_test1, y_test1 = classification.generate_train_test(list_dataset[0], sinalizador)
+  if window == 0: 
+    for dataset in list_dataset:
+      X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(dataset, sinalizador)
+      X_train, y_train, X_test, y_test = concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2)
+  else:
+    #del list_del[window]
+    for dataset in range(len(list_dataset)):
+      if dataset != window:
+        X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(list_dataset[dataset], sinalizador)
+        X_train, y_train, X_test, y_test = concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2)
+
+  X_train, y_train = shuffle(X_train, y_train)
+  X_test, y_test = shuffle(X_test, y_test)
+  return X_train, y_train, X_test, y_test
+
+
+def experiment_test(list_dataset, list_names_dataset, list_sinalizadores,database_path):
+  execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT)",database_path)
+  list_window = np.arange(0,len(list_dataset)).tolist()
+  for sinalizador in list_sinalizadores:
+    for window in list_window:
+      X_train, y_train, X_test, y_test = sliding_window(list_dataset, sinalizador, window)
+      print('treinou')
+      accuracy, precision, recall, f1 = individual(X_train, y_train, X_test, y_test)
+      execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], accuracy, precision, recall, f1),database_path)
+  return
