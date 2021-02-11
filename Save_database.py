@@ -1,6 +1,7 @@
 import sqlite3
 import contextlib
 from CSTSL import classification
+import numpy as np
 
 #Função para executar INSERT INTO
 def execute_insert(sql,data,database_path):
