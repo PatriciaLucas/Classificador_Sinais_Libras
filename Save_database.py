@@ -56,9 +56,12 @@ def sliding_window(list_dataset, sinalizador, window):
   return X_train, y_train, X_test, y_test
 
 
-def experiment(list_dataset, list_names_dataset, list_sinalizadores,database_path):
+def experiment(list_dataset, list_names_dataset, list_sinalizadores,database_path,sliding):
   execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT)",database_path)
-  list_window = np.arange(0,len(list_dataset)).tolist()
+  if sliding:
+    list_window = np.arange(0,len(list_dataset)).tolist()
+  else:
+    list_window = [0]
   for sinalizador in list_sinalizadores:
     for window in list_window:
       X_train, y_train, X_test, y_test = sliding_window(list_dataset, sinalizador, window)
