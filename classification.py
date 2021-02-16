@@ -67,8 +67,9 @@ def generate_train_test(matriz_path,numsinalizador):
     label = label.replace('.npy', '') #Exemplo: 'Maca'
     
     if (matriz.split('-')[0] == numsinalizador): 
-      labeltest.append(label)
-      datatest.append(mat)
+      if (matriz_path == '/content/drive/MyDrive/PROJETO_TAMIRES/Dataset/Matriz20x150_dadosrelativos'): 
+        labeltest.append(label)
+        datatest.append(mat)
     else:    
       labeltrain.append(label)
       datatrain.append(mat)
