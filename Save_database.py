@@ -52,7 +52,7 @@ def sliding_window(list_dataset, sinalizador, window):
         X_train, y_train, X_test, y_test = concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2)
 
   X_train, y_train = shuffle(X_train, y_train)
-  X_test, y_test = shuffle(X_test[100:], y_testX_test[100:])
+  X_test, y_test = shuffle(X_test[100:], y_test[100:])
   return X_train, y_train, X_test, y_test
 
 
