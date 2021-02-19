@@ -18,7 +18,31 @@ def order(x,y):
   y = order2.drop(columns="index")
   y = y.T
 
-  matriz = x.append(y) 
+  del(order1)
+  del(order2)
+
+  # normalizacao 0-1
+  xBody = x.describe().loc[['max']]
+  maximoX = xBody.T.max()
+  yBody = y.describe().loc[['max']]
+  maximoY = yBody.T.max()
+
+  xBody = x.describe().loc[['min']]
+  minimoX = xBody.T.min()
+  yBody = y.describe().loc[['min']]
+  minimoY = yBody.T.min()
+
+  df_normX = (x - float(minimoX)) / (float(maximoX) - float(minimoX))
+  df_normY = (y - float(minimoY)) / (float(maximoY) - float(minimoY))
+
+  del(xBody)
+  del(yBody)
+  del(maximoX)
+  del(maximoY)
+  del(minimoX)
+  del(minimoY)
+
+  matriz = df_normX.append(df_normY) 
   return matriz
 
 def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
