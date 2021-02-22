@@ -154,40 +154,21 @@ def shift(X, periods):
     result[col] = array.reshape((150))
   return result
 
-def processing_shiftdata(sinais, sinalizadores, gravacoes, path_data, path_save, list_shift):
+def processing_shiftdata(path_data, path_save, list_shift):
   """
-  Gera amostras de série temporais multivariadas com as coordenadas dos pontos relativos ao ponto da cabeca, sendo que o ponto de referência recebe um ruido gaussiano de desvio 0.05
-  :parametro sinais, sinalizadores e gravacoes: formam o nome dos arquivos que serao utilizados  
   :parametro path_data: caminho dos dados que serao transfomados
   :parametro path_save: onde a matriz sera salva
-  :return: série multivariadas dos dados relativos a coordenada da cabeça pertubada por um ruido
+  :return: 
   """
 
-  for sinalizador in sinalizadores:
-    num_sinalizador = sinalizadores.index(sinalizador)+1
-    for sinal in sinais:
-      for gravacao in gravacoes:
-        arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
-        
-        dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
-        dadosBody = pd.DataFrame.transpose(dadosBody)
-        dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
-        dadosBody10 = dadosBody17.drop(dadosBody17.index[[0,1,2,3,4,8,12]]) # excluindo pontos que nao apresentaram movimento durante a execucao dos sinais
+  matrizPaths = os.listdir(matriz_path)
+  dados = []
+  for mat in matrizPaths:
+    matrix = np.load(matriz_path + mat)
+    num = randint(0,len(list_shift))
+    matriz = shift(matrix,periods=list_shift[num])
+    np.save(path_save + mat, matriz)
 
-        # pegando os valores de x e y
-        x = pd.DataFrame()
-        y = pd.DataFrame()
-        j=0
-
-        for i in range(0, 1950,13):
-          x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
-          y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
-          j+=1
-
-        matriz = order(x,y)
-        num = randint(0,len(list_shift))
-        matriz = shift(matriz,periods=list_shift[num])
-        np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
 def processing_smoothingdata(matriz_path, path_save, lag):
