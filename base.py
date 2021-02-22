@@ -154,7 +154,7 @@ def shift(X, periods):
     result[col] = array.reshape((150))
   return result
 
-def processing_shiftdata(path_data, path_save, list_shift):
+def processing_shiftdata(matriz_path, path_save, list_shift):
   """
   :parametro path_data: caminho dos dados que serao transfomados
   :parametro path_save: onde a matriz sera salva
