@@ -147,12 +147,11 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
 
 def shift(X, periods): 
   result = np.zeros_like(X)
-  for i, pat in enumerate(X):
-    for col in range(X.shape[0]):
-      df = pd.DataFrame(X[col])
-      df = df.shift(periods=periods,fill_value=X[col,0])
-      array = df.to_numpy()
-      result[col] = array.reshape((150))
+  for col in range(X.shape[0]):
+    df = pd.DataFrame(X[col])
+    df = df.shift(periods=periods,fill_value=X[col,0])
+    array = df.to_numpy()
+    result[col] = array.reshape((150))
   return result
 
 def processing_shiftdata(sinais, sinalizadores, gravacoes, path_data, path_save, list_shift):
