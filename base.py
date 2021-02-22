@@ -165,7 +165,7 @@ def processing_shiftdata(matriz_path, path_save, list_shift):
   dados = []
   for mat in matrizPaths:
     matrix = np.load(matriz_path + mat)
-    num = randint(0,len(list_shift))
+    num = randint(0,len(list_shift)-1)
     matriz = shift(matrix,periods=list_shift[num])
     np.save(path_save + mat, matriz)
 
