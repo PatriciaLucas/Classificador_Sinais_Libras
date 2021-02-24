@@ -146,6 +146,44 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
+def window_warp(x):
+    # https://halshs.archives-ouvertes.fr/halshs-01357973/document
+    window_ratio=0.01
+    scales=[0, 20]
+    x = np.swapaxes(x, 1, 2)
+    warp_scales = np.random.choice(scales, x.shape[0])
+    warp_size = np.ceil(window_ratio*x.shape[1]).astype(int)
+    window_steps = np.arange(warp_size)
+        
+    window_starts = np.random.randint(low=1, high=x.shape[1]-warp_size-1, size=(x.shape[0])).astype(int)
+    window_ends = (window_starts + warp_size).astype(int)
+            
+    ret = np.zeros_like(x)
+    for i, pat in enumerate(x):
+        for dim in range(x.shape[2]):
+            start_seg = pat[:window_starts[i],dim]
+            window_seg = np.interp(np.linspace(0, warp_size-1, num=int(warp_size*warp_scales[i])), window_steps, pat[window_starts[i]:window_ends[i],dim])
+            end_seg = pat[window_ends[i]:,dim]
+            warped = np.concatenate((start_seg, window_seg, end_seg))                
+            ret[i,:,dim] = np.interp(np.arange(x.shape[1]), np.linspace(0, x.shape[1]-1., num=warped.size), warped).T
+    return np.swapaxes(ret, 1, 2)
+
+def processing_warpdata(matriz_path, path_save):
+  """
+  :parametro path_data: caminho dos dados que serao transfomados
+  :parametro path_save: onde a matriz sera salva
+  :return: 
+  """
+
+  matrizPaths = os.listdir(matriz_path)
+  dados = []
+  for mat in matrizPaths:
+    matrix = np.load(matriz_path + mat)
+    matriz = window_warp(matrix)
+    np.save(path_save + mat, matriz)
+
+  return matriz
+
 def shift(X, periods): 
   result = np.zeros_like(X)
   for col in range(X.shape[0]):
