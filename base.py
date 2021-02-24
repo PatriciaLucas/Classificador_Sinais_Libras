@@ -154,7 +154,7 @@ def shift(X, periods):
     result[col] = array.reshape((150))
   return result
 
-def processing_shiftdata(matriz_path, path_save, list_shift):
+def processing_shiftdata(matriz_path, path_save):
   """
   :parametro path_data: caminho dos dados que serao transfomados
   :parametro path_save: onde a matriz sera salva
@@ -165,8 +165,8 @@ def processing_shiftdata(matriz_path, path_save, list_shift):
   dados = []
   for mat in matrizPaths:
     matrix = np.load(matriz_path + mat)
-    num = randint(0,len(list_shift)-1)
-    matriz = shift(matrix,periods=list_shift[num])
+    num = int(random.normal(loc=0, scale=5))
+    matriz = shift(matrix,periods=num)
     np.save(path_save + mat, matriz)
 
   return matriz
