@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from random import randint
+from numpy import random
 
 def order(x,y):
   # ordenando os índices dos dataframes
