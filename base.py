@@ -179,7 +179,7 @@ def processing_warpdata(matriz_path, path_save):
   dados = []
   for mat in matrizPaths:
     matrix = np.load(matriz_path + mat)
-    matriz = window_warp(np.stack((matriz,)*1, axis=0))
+    matriz = window_warp(np.stack((matrix,)*1, axis=0))
     np.save(path_save + mat, matriz)
 
   return matriz
