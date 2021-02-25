@@ -166,7 +166,7 @@ def window_warp(x):
             end_seg = pat[window_ends[i]:,dim]
             warped = np.concatenate((start_seg, window_seg, end_seg))                
             ret[i,:,dim] = np.interp(np.arange(x.shape[1]), np.linspace(0, x.shape[1]-1., num=warped.size), warped).T
-    return np.swapaxes(ret, 1, 2)
+    return ret[0,:,:].T
 
 def processing_warpdata(matriz_path, path_save):
   """
@@ -179,7 +179,7 @@ def processing_warpdata(matriz_path, path_save):
   dados = []
   for mat in matrizPaths:
     matrix = np.load(matriz_path + mat)
-    matriz = window_warp(matrix)
+    matriz = window_warp(np.stack((matriz,)*1, axis=0))
     np.save(path_save + mat, matriz)
 
   return matriz
