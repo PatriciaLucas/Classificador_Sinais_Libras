@@ -40,17 +40,16 @@ def concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2
   return X_train, y_train, X_test, y_test
 
 def sliding_window(list_dataset, sinalizador, window):
-  lista_pontos = [2,5,12,15]
   X_train1, y_train1, X_test1, y_test1 = classification.generate_train_test(list_dataset[0], sinalizador)
   if window == 0: 
     for dataset in list_dataset:
       X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(dataset, sinalizador)
-      X_train, y_train, X_test, y_test = concatenate_samples(X_train1[lista_pontos], y_train1[lista_pontos], X_test1[lista_pontos], y_test1[lista_pontos], X_train2[lista_pontos], y_train2[lista_pontos], X_test2[lista_pontos], y_test2[lista_pontos])
+      X_train, y_train, X_test, y_test = concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2)
   else:
     for dataset in range(len(list_dataset)):
       if dataset != window:
         X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(list_dataset[dataset], sinalizador)
-        X_train, y_train, X_test, y_test = concatenate_samples(X_train1[lista_pontos], y_train1[lista_pontos], X_test1[lista_pontos], y_test1[lista_pontos], X_train2[lista_pontos], y_train2[lista_pontos], X_test2[lista_pontos], y_test2[lista_pontos])
+        X_train, y_train, X_test, y_test = concatenate_samples(X_train1, y_train1, X_test1, y_test1, X_train2, y_train2, X_test2, y_test2)
 
   X_train, y_train = shuffle(X_train, y_train)
   X_test, y_test = shuffle(X_test[100:], y_test[100:])
