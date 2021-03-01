@@ -58,6 +58,8 @@ def generate_train_test(matriz_path,numsinalizador):
   datatrain = []
   labeltrain = []
 
+  lista_pontos = [2,5,12,15]
+
   matrizPaths = os.listdir(matriz_path) #nome dos arquivos
   for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
     mat = np.load(matriz_path + '/' + matriz)
@@ -67,11 +69,11 @@ def generate_train_test(matriz_path,numsinalizador):
     label = label.replace('.npy', '') #Exemplo: 'Maca'
     
     if (matriz.split('-')[0] == numsinalizador): 
-      labeltest.append(label)
-      datatest.append(mat)
+      labeltest.append(label[lista_pontos])
+      datatest.append(mat[lista_pontos])
     else:    
-      labeltrain.append(label)
-      datatrain.append(mat)
+      labeltrain.append(label[lista_pontos])
+      datatrain.append(mat[lista_pontos])
 
   lb = LabelBinarizer()
   y_train = lb.fit_transform(labeltrain)
