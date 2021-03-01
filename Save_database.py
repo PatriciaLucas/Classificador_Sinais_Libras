@@ -64,8 +64,9 @@ def experiment(list_dataset, list_names_dataset, list_sinalizadores,database_pat
     list_window = [0]
   for sinalizador in list_sinalizadores:
     for window in list_window:
+      lista_pontos = [2,5,12,15]
       X_train, y_train, X_test, y_test = sliding_window(list_dataset, sinalizador, window)
-      accuracy, precision, recall, f1 = individual(X_train, y_train, X_test, y_test)
+      accuracy, precision, recall, f1 = individual(X_train[lista_pontos], y_train[lista_pontos], X_test[lista_pontos], y_test[lista_pontos])
       execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], accuracy, precision, recall, f1),database_path)
   return
 
