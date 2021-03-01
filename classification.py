@@ -58,7 +58,7 @@ def generate_train_test(matriz_path,numsinalizador):
   datatrain = []
   labeltrain = []
 
-  lista_pontos = [1,2,4,5,6,8,11,12,14,15,16,18]
+  lista_pontos = [1,2,4,5,6,7,8,9,11,12,14,15,16,17,18,19]
 
   matrizPaths = os.listdir(matriz_path) #nome dos arquivos
   for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
