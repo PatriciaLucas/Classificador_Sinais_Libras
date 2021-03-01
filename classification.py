@@ -69,10 +69,10 @@ def generate_train_test(matriz_path,numsinalizador):
     label = label.replace('.npy', '') #Exemplo: 'Maca'
     
     if (matriz.split('-')[0] == numsinalizador): 
-      labeltest.append(label[lista_pontos])
+      labeltest.append(label)
       datatest.append(mat[lista_pontos])
     else:    
-      labeltrain.append(label[lista_pontos])
+      labeltrain.append(label)
       datatrain.append(mat[lista_pontos])
 
   lb = LabelBinarizer()
