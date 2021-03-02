@@ -20,9 +20,9 @@ def order(x,y):
   y = order2.drop(columns="index")
   y = y.T
 
-  del(order1)
-  del(order2)
+  return x,y
 
+def norm01(x,y)
   # normalizacao 0-1
   xBody = x.describe().loc[['max']]
   maximoX = xBody.T.max()
@@ -34,17 +34,52 @@ def order(x,y):
   yBody = y.describe().loc[['min']]
   minimoY = yBody.T.min()
 
+  return maximoX, maximoY, minimoX, minimoY
+
+def matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
   df_normX = (x - float(minimoX)) / (float(maximoX) - float(minimoX))
   df_normY = (y - float(minimoY)) / (float(maximoY) - float(minimoY))
 
-  del(xBody)
-  del(yBody)
-  del(maximoX)
-  del(maximoY)
-  del(minimoX)
-  del(minimoY)
+  df_normX,df_normY = order(df_normX,df_normY)
 
   matriz = df_normX.append(df_normY) 
+  return matriz
+
+def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_save):
+
+  for sinal in sinais:
+    dadossinal_X = pd.DataFrame()  
+    dadossinal_Y = pd.DataFrame() 
+    
+    for sinalizador in sinalizadores:
+      num_sinalizador = sinalizadores.index(sinalizador)+1
+
+      for gravacao in gravacoes:
+        arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
+        
+        dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
+        dadosBody = pd.DataFrame.transpose(dadosBody)
+        dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
+        dadosBody10 = dadosBody17.drop(dadosBody17.index[[0,1,2,3,4,8,12]]) # excluindo pontos que nao apresentaram movimento durante a execucao dos sinais
+
+        # pegando os valores de x e y
+        x = pd.DataFrame()
+        y = pd.DataFrame()
+        j=0
+        for i in range(0, 1950,13):
+          x = pd.concat([x, dadosBody10[i]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]], axis=1)
+          j+=1
+        
+        dadossinal_X = pd.concat([dadossinal_X, x], axis=0)
+        dadossinal_Y = pd.concat([dadossinal_Y, y], axis=0)
+
+        dadossinal_X,dadossinal_Y = order(dadossinal_X,dadossinal_Y)
+        maximoX, maximoY, minimoX, minimoY = norm01(dadossinal_Y,dadossinal_Y)
+        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
+
+        np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
+
   return matriz
 
 def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
@@ -75,7 +110,9 @@ def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
           y = pd.concat([y, dadosBody10[i+1]], axis=1)
           j+=1
 
-        matriz = order(x,y)
+        x,y = order(x,y)
+        maximoX, maximoY, minimoX, minimoY = norm01(x,y)
+        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
@@ -107,7 +144,9 @@ def processing_relationdata(sinais, sinalizadores, gravacoes, path_data, path_sa
           y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
           j+=1
 
-        matriz = order(x,y)
+        x,y = order(x,y)
+        maximoX, maximoY, minimoX, minimoY = norm01(x,y)
+        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
@@ -142,7 +181,9 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
           y = pd.concat([y, dadosBody10[i+1]-(dadosBody[i+1][3]+np.random.normal(loc=dadosBody[i+1][3], scale=0.05, size=1))], axis=1)
           j+=1
 
-        matriz = order(x,y)
+        x,y = order(x,y)
+        maximoX, maximoY, minimoX, minimoY = norm01(x,y)
+        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
