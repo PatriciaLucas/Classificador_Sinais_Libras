@@ -22,7 +22,7 @@ def order(x,y):
 
   return x,y
 
-def norm01(x,y)
+def norm01(x,y):
   # normalizacao 0-1
   xBody = x.describe().loc[['max']]
   maximoX = xBody.T.max()
@@ -36,7 +36,7 @@ def norm01(x,y)
 
   return maximoX, maximoY, minimoX, minimoY
 
-def matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
+def matriznorm(x, y, maximoX, maximoY, minimoX, minimoY):
   df_normX = (x - float(minimoX)) / (float(maximoX) - float(minimoX))
   df_normY = (y - float(minimoY)) / (float(maximoY) - float(minimoY))
 
