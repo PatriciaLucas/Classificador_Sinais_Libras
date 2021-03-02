@@ -49,14 +49,11 @@ def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_sa
 
   for sinal in sinais:
     dadossinal_X = pd.DataFrame()  
-    dadossinal_Y = pd.DataFrame() 
-    
+    dadossinal_Y = pd.DataFrame()    
     for sinalizador in sinalizadores:
       num_sinalizador = sinalizadores.index(sinalizador)+1
-
       for gravacao in gravacoes:
         arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
-        
         dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
         dadosBody = pd.DataFrame.transpose(dadosBody)
         dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
@@ -75,9 +72,25 @@ def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_sa
         dadossinal_Y = pd.concat([dadossinal_Y, y], axis=0)
 
         dadossinal_X,dadossinal_Y = order(dadossinal_X,dadossinal_Y)
-        maximoX, maximoY, minimoX, minimoY = norm01(dadossinal_Y,dadossinal_Y)
-        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
+        maximoX, maximoY, minimoX, minimoY = norm01(dadossinal_Y,dadossinal_Y) #por sinal
 
+    for sinalizador in sinalizadores:
+      num_sinalizador = sinalizadores.index(sinalizador)+1
+      for gravacao in gravacoes:
+        arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
+        dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
+        dadosBody = pd.DataFrame.transpose(dadosBody)
+        dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
+        dadosBody10 = dadosBody17.drop(dadosBody17.index[[0,1,2,3,4,8,12]]) # excluindo pontos que nao apresentaram movimento durante a execucao dos sinais
+        # pegando os valores de x e y
+        x = pd.DataFrame()
+        y = pd.DataFrame()
+        j=0
+        for i in range(0, 1950,13):
+          x = pd.concat([x, dadosBody10[i]], axis=1)
+          y = pd.concat([y, dadosBody10[i+1]], axis=1)
+          j+=1    
+        matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
 
   return matriz
