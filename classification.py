@@ -52,39 +52,44 @@ def generate(X, matriz_path, lista):
     y_train = y_train.squeeze().argmax(axis=1)
     return x_train, y_train
 
-def generate_train_test(matriz_path,numsinalizador):
+def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1'):
   datatest = []
   labeltest = []
   datatrain = []
   labeltrain = []
 
-  lista_pontos = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+  if form == 'sinalizador':
+      lista_pontos = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 
-  matrizPaths = os.listdir(matriz_path) #nome dos arquivos
-  for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
-    mat = np.load(matriz_path + '/' + matriz)
-    label = ''.join(i for i in matriz if not i.isdigit()) #Exemplo: '-Maca_.npy'
-    label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
-    label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
-    label = label.replace('.npy', '') #Exemplo: 'Maca'
-    
-    if (matriz.split('-')[0] == numsinalizador): 
-      labeltest.append(label)
-      datatest.append(mat[lista_pontos])
-    else:    
-      labeltrain.append(label)
-      datatrain.append(mat[lista_pontos])
+      matrizPaths = os.listdir(matriz_path) #nome dos arquivos
+      for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
+        mat = np.load(matriz_path + '/' + matriz)
+        label = ''.join(i for i in matriz if not i.isdigit()) #Exemplo: '-Maca_.npy'
+        label = ''.join(c for c in label if c not in '-') #Exemplo: 'Maca_.npy'
+        label = ''.join(c for c in label if c not in '_') #Exemplo: 'Maca.npy'
+        label = label.replace('.npy', '') #Exemplo: 'Maca'
+        if (matriz.split('-')[0] == numsinalizador): 
+            labeltest.append(label)
+            datatest.append(mat[lista_pontos])
+        else:    
+            labeltrain.append(label)
+            datatrain.append(mat[lista_pontos])
 
-  lb = LabelBinarizer()
-  y_train = lb.fit_transform(labeltrain)
-  y_train = np.stack((y_train,)*1, axis=-1)
-  y_train = y_train.squeeze().argmax(axis=1)
+      lb = LabelBinarizer()
+      y_train = lb.fit_transform(labeltrain)
+      y_train = np.stack((y_train,)*1, axis=-1)
+      y_train = y_train.squeeze().argmax(axis=1)
 
-  y_test = lb.fit_transform(labeltest)
-  y_test = np.stack((y_test,)*1, axis=-1)
-  y_test = y_test.squeeze().argmax(axis=1)
+      y_test = lb.fit_transform(labeltest)
+      y_test = np.stack((y_test,)*1, axis=-1)
+      y_test = y_test.squeeze().argmax(axis=1)
 
-  x_train = np.array(datatrain, dtype = 'float32')
-  x_test = np.array(datatest, dtype = 'float32')
+      X_train = np.array(datatrain, dtype = 'float32')
+      X_test = np.array(datatest, dtype = 'float32')
+  else:
+      _,indices, dados_Y, lista = return_labels(matriz_path)
+      (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,test_size=0.25,stratify=dados_Y)
+      X_train, y_train = generate(train_X, matriz_path, lista)
+      X_test, y_test = generate(test_X, matriz_path, lista)
 
-  return x_train, y_train, x_test, y_test
+  return X_train, y_train, X_test, y_test
