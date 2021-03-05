@@ -77,12 +77,12 @@ def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1'):
 
       lb = LabelBinarizer()
       y_train = lb.fit_transform(labeltrain)
-      #y_train = np.stack((y_train,)*1, axis=-1)
-      #y_train = y_train.squeeze().argmax(axis=1)
+      y_train = np.stack((y_train,)*1, axis=-1)
+      y_train = y_train.squeeze().argmax(axis=1)
 
       y_test = lb.fit_transform(labeltest)
-      #y_test = np.stack((y_test,)*1, axis=-1)
-      #y_test = y_test.squeeze().argmax(axis=1)
+      y_test = np.stack((y_test,)*1, axis=-1)
+      y_test = y_test.squeeze().argmax(axis=1)
 
       X_train = np.array(datatrain, dtype = 'float32')
       X_test = np.array(datatest, dtype = 'float32')
