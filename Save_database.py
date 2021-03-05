@@ -57,7 +57,7 @@ def sliding_window(list_dataset, sinalizador, window):
 
 
 def experiment(list_dataset, list_names_dataset, database_path, num_execute, num_sinalizadores=12, leave_one_out=True, form='sinalizador'):
-  execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT)",database_path)
+  execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, y_hat BLOB, y_test BLOB)",database_path)
   for exec in range(num_execute):
       if form == 'sinalizador':
         list_sinalizadores = []
@@ -70,8 +70,9 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
         for sinalizador in list_sinalizadores:
           for window in list_window:
             X_train, y_train, X_test, y_test = sliding_window(list_dataset, sinalizador, window)
-            accuracy, precision, recall, f1 = individual(X_train, y_train, X_test, y_test)
-            execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], accuracy, precision, recall, f1),database_path)
+            accuracy, precision, recall, f1, yhat, y_test = individual(X_train, y_train, X_test, y_test)
+            execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], accuracy, precision, recall, 
+                                                                           f1, yhat.tostring(), y_test.tostring()),database_path)
       else:
         X_train, y_train, X_test, y_test = classification.generate_train_test(list_dataset[0], form=None)
         for dataset in list_dataset[1:]:
@@ -79,20 +80,23 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
           X_train, y_train, X_test, y_test = concatenate_samples(X_train, y_train, X_test, y_test, X_train2, y_train2, X_test2, y_test2)
         X_train, y_train = shuffle(X_train, y_train)
         X_test, y_test = shuffle(X_test, y_test)
-        accuracy, precision, recall, f1 = individual(X_train, y_train, X_test, y_test)
-        execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[0], accuracy, precision, recall, f1),database_path)
+        accuracy, precision, recall, f1, yhat, y_test = individual(X_train, y_train, X_test, y_test)
+        execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[0], accuracy, precision, recall, 
+                                                                       f1, yhat.tostring(), y_test.tostring()),database_path)
   return
 
 def individual(X_train, y_train, X_test, y_test):
   from tcn import compiled_tcn
   from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+  from keras.callbacks import EarlyStopping
+  call = [EarlyStopping(monitor='loss', mode='min', patience=5, verbose=1),]
   model = compiled_tcn(return_sequences=False,num_feat=150,num_classes=20,nb_filters=32,kernel_size=5,dilations=[2 ** i for i in range(2)],
                        padding='causal',dropout_rate=0,use_batch_norm=True,nb_stacks=1,max_len=X_train[0:1].shape[1],opt='adam',
                        use_skip_connections=True)
-  history = model.fit(X_train, y_train, epochs=100, workers=4, use_multiprocessing=True, verbose=0)
-  yhat = model.predict(X_test).squeeze().argmax(axis=1)
+  history = model.fit(X_train, y_train, epochs=100, workers=4, use_multiprocessing=True, verbose=0, callbacks=call)
+  yhat = model.predict(X_test)
   accuracy = model.evaluate(X_test, y_test)[1]
-  precision = precision_score(y_test, yhat, average='macro')
-  recall = recall_score(y_test, yhat, average='macro')
-  f1 = f1_score(y_test, yhat, average='macro')
-  return accuracy, precision, recall, f1
+  precision = precision_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
+  recall = recall_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
+  f1 = f1_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
+  return accuracy, precision, recall, f1, yhat, y_test
