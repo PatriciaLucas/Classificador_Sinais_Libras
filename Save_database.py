@@ -57,7 +57,8 @@ def sliding_window(list_dataset, sinalizador, window):
 
 
 def experiment(list_dataset, list_names_dataset, database_path, num_execute, num_sinalizadores=12, leave_one_out=True, form='sinalizador'):
-  execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, y_hat BLOB, y_test BLOB)",database_path)
+  import time
+  execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, sinalizador TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, tempo FLOAT, y_hat BLOB, y_test BLOB)",database_path)
   for exec in range(num_execute):
       if form == 'sinalizador':
         list_sinalizadores = []
@@ -70,9 +71,11 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
         for sinalizador in list_sinalizadores:
           for window in list_window:
             X_train, y_train, X_test, y_test = sliding_window(list_dataset, sinalizador, window)
+            start_time = time.time()
             accuracy, precision, recall, f1, yhat, y_test = individual(X_train, y_train, X_test, y_test)
-            execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], accuracy, precision, recall, 
-                                                                           f1, yhat.tostring(), y_test.tostring()),database_path)
+            tempo = time.time() - start_time
+            execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], sinalizador, accuracy, precision, recall, 
+                                                                           f1, tempo, yhat.tostring(), y_test.tostring()),database_path)
       else:
         X_train, y_train, X_test, y_test = classification.generate_train_test(list_dataset[0], form=None)
         for dataset in list_dataset[1:]:
@@ -80,9 +83,11 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
           X_train, y_train, X_test, y_test = concatenate_samples(X_train, y_train, X_test, y_test, X_train2, y_train2, X_test2, y_test2)
         X_train, y_train = shuffle(X_train, y_train)
         X_test, y_test = shuffle(X_test, y_test)
+        start_time = time.time()
         accuracy, precision, recall, f1, yhat, y_test = individual(X_train, y_train, X_test, y_test)
-        execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[0], accuracy, precision, recall, 
-                                                                       f1, yhat.tostring(), y_test.tostring()),database_path)
+        tempo = time.time() - start_time
+        execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[0], '-', accuracy, precision, recall, 
+                                                                           f1, tempo, yhat.tostring(), y_test.tostring()),database_path)
   return
 
 def individual(X_train, y_train, X_test, y_test):
