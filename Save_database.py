@@ -97,9 +97,9 @@ def individual(X_train, y_train, X_test, y_test):
                        padding='causal',dropout_rate=0,use_batch_norm=True,nb_stacks=1,max_len=X_train[0:1].shape[1],opt='adam',
                        use_skip_connections=True)
   history = model.fit(X_train, y_train, epochs=100, workers=4, use_multiprocessing=True, verbose=0)
-  yhat = model.predict(X_test)
+  yhat = model.predict(X_test).squeeze().argmax(axis=1)
   accuracy = model.evaluate(X_test, y_test)[1]
-  precision = precision_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
-  recall = recall_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
-  f1 = f1_score(y_test, yhat.squeeze().argmax(axis=1), average='macro')
+  precision = precision_score(y_test, yhat, average='macro')
+  recall = recall_score(y_test, yhat, average='macro')
+  f1 = f1_score(y_test, yhat, average='macro')
   return accuracy, precision, recall, f1, yhat, y_test
