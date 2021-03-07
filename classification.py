@@ -88,7 +88,7 @@ def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1'):
       X_test = np.array(datatest, dtype = 'float32')
   else:
       _,indices, dados_Y, lista = return_labels(matriz_path)
-      (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,test_size=0.25,stratify=dados_Y)
+      (train_X, test_X, train_Y, test_Y) = train_test_split(indices,dados_Y,test_size=100,stratify=dados_Y,random_state=42)
       X_train, y_train = generate(train_X, matriz_path, lista)
       X_test, y_test = generate(test_X, matriz_path, lista)
 
