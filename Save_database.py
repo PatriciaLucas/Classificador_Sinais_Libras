@@ -83,6 +83,10 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
           X_train, y_train, X_test, y_test = concatenate_samples(X_train, y_train, X_test, y_test, X_train2, y_train2, X_test2, y_test2)
         X_train, y_train = shuffle(X_train, y_train)
         X_test, y_test = shuffle(X_test, y_test)
+        X_train = np.concatenate((X_train, X_test[100:]), axis=0)
+        y_train = np.concatenate((y_train, y_test[100:]), axis=0)
+        X_test = X_test[:100]
+        y_test = y_test[:100]
         start_time = time.time()
         accuracy, precision, recall, f1, yhat, y_test = individual(X_train, y_train, X_test, y_test)
         tempo = time.time() - start_time
