@@ -78,9 +78,9 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
             execute_insert("INSERT INTO results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",('individual', list_names_dataset[window], sinalizador, accuracy, precision, recall, 
                                                                            f1, tempo, yhat.tostring(), y_test.tostring()),database_path)
       else:
-        X_train, y_train, X_test, y_test = classification.generate_train_test(list_dataset[0], form=None)
+        X_train, y_train, X_test, y_test = classification.generate_train_test(list_dataset[0], form=None,  lista_sinalizadores=l)
         for dataset in list_dataset[1:]:
-          X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(dataset, form=None)
+          X_train2, y_train2, X_test2, y_test2 = classification.generate_train_test(dataset, form=None,  lista_sinalizadores=l)
           X_train, y_train, X_test, y_test = concatenate_samples(X_train, y_train, X_test, y_test, X_train2, y_train2, X_test2, y_test2)
         X_train, y_train = shuffle(X_train, y_train)
         X_test, y_test = shuffle(X_test, y_test)
