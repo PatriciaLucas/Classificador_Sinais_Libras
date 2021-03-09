@@ -52,7 +52,7 @@ def generate(X, matriz_path, lista):
     y_train = y_train.squeeze().argmax(axis=1)
     return x_train, y_train
 
-def generate_train_test(matriz_path, lista_sinalizadores, form='sinalizador', numsinalizador='1'):
+def generate_train_test(matriz_path, lista_sinalizadores, numsinalizador='1', form='sinalizador'):
   datatest = []
   labeltest = []
   datatrain = []
