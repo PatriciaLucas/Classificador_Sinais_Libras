@@ -60,10 +60,13 @@ def sliding_window(list_dataset, sinalizador, l, window):
 def experiment(list_dataset, list_names_dataset, database_path, num_execute, num_sinalizadores=12, leave_one_out=True, form='sinalizador'):
   import time
   execute("CREATE TABLE IF NOT EXISTS results(name_model TEXT, dataset TEXT, sinalizador TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, tempo FLOAT, y_hat BLOB, y_test BLOB)",database_path)
+  if num_sinalizadores != 12:
+    l = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
   for exec in range(num_execute):
       if form == 'sinalizador':
         list_sinalizadores = []
-        l = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
+        if num_sinalizadores == 12:
+          l = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
         for x in l: list_sinalizadores.append(str(x)) 
         if leave_one_out:
           list_window = np.arange(0,len(list_dataset)).tolist()
