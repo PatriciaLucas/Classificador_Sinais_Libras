@@ -3,6 +3,7 @@ import contextlib
 from CSTSL import classification
 import numpy as np
 from sklearn.utils import shuffle
+import random
 
 #Função para executar INSERT INTO
 def execute_insert(sql,data,database_path):
@@ -62,7 +63,7 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
   for exec in range(num_execute):
       if form == 'sinalizador':
         list_sinalizadores = []
-        l = sorted(random.sample(np.arange(1,num_sinalizadores+1).tolist(),6))
+        l = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
         for x in l: list_sinalizadores.append(str(x)) 
         if leave_one_out:
           list_window = np.arange(0,len(list_dataset)).tolist()
