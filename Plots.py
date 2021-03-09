@@ -154,7 +154,7 @@ def plot_roc_curve2(n_classes, pred, y_test):
   for i in range(pred.shape[0]):
       pred2 = np.frombuffer(pred[i], dtype=np.int)
       y_test2 = np.frombuffer(y_test[i], dtype=np.int)
-      fpr_macro, tpr_macro, roc_auc_macro = plot_roc_curve_aux(n_classes, pred2, y_test2)
+      fpr_macro, tpr_macro, roc_auc_macro = plot_roc_curve_aux2(n_classes, pred2, y_test2)
       erro = False
       interp_tpr = np.interp(mean_fpr, fpr_macro, tpr_macro)
       interp_tpr[0] = 0.0
