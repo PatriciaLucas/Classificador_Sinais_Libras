@@ -52,7 +52,7 @@ def generate(X, matriz_path, lista):
     y_train = y_train.squeeze().argmax(axis=1)
     return x_train, y_train
 
-def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1'):
+def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1', lista_sinalizadores):
   datatest = []
   labeltest = []
   datatrain = []
@@ -71,7 +71,8 @@ def generate_train_test(matriz_path, form='sinalizador', numsinalizador='1'):
         if (matriz.split('-')[0] == numsinalizador): 
             labeltest.append(label)
             datatest.append(mat[lista_pontos])
-        else:    
+        else:
+          if matriz.split('-')[0] in lista_sinalizadores:
             labeltrain.append(label)
             datatrain.append(mat[lista_pontos])
 
