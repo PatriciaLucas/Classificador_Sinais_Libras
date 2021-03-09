@@ -62,7 +62,7 @@ def experiment(list_dataset, list_names_dataset, database_path, num_execute, num
   for exec in range(num_execute):
       if form == 'sinalizador':
         list_sinalizadores = []
-        l = np.arange(1,num_sinalizadores+1).tolist()
+        l = sorted(random.sample(np.arange(1,12+1).tolist(),6))
         for x in l: list_sinalizadores.append(str(x)) 
         if leave_one_out:
           list_window = np.arange(0,len(list_dataset)).tolist()
