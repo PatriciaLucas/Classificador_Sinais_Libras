@@ -116,11 +116,9 @@ def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_sa
         # pegando os valores de x e y
         x = pd.DataFrame()
         y = pd.DataFrame()
-        j=0
         for i in range(0, 1950,13):
           x = pd.concat([x, dadosBody10[i]], axis=1)
           y = pd.concat([y, dadosBody10[i+1]], axis=1)
-          j+=1
         
         dadossinal_X = pd.concat([dadossinal_X, x], axis=0)
         dadossinal_Y = pd.concat([dadossinal_Y, y], axis=0)
@@ -139,11 +137,10 @@ def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_sa
         # pegando os valores de x e y
         x = pd.DataFrame()
         y = pd.DataFrame()
-        j=0
         for i in range(0, 1950,13):
           x = pd.concat([x, dadosBody10[i]], axis=1)
           y = pd.concat([y, dadosBody10[i+1]], axis=1)
-          j+=1    
+
         matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
 
@@ -171,11 +168,9 @@ def processing_rawdata(sinais, sinalizadores, gravacoes, path_data, path_save):
         # pegando os valores de x e y
         x = pd.DataFrame()
         y = pd.DataFrame()
-        j=0
         for i in range(0, 1950,13):
           x = pd.concat([x, dadosBody10[i]], axis=1)
           y = pd.concat([y, dadosBody10[i+1]], axis=1)
-          j+=1
 
         x,y = order(x,y)
         maximoX, maximoY, minimoX, minimoY = norm01(x,y)
@@ -205,11 +200,9 @@ def processing_relationdata(sinais, sinalizadores, gravacoes, path_data, path_sa
         # pegando os valores de x e y
         x = pd.DataFrame()
         y = pd.DataFrame()
-        j=0
         for i in range(0, 1950,13):
           x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
           y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
-          j+=1
 
         x,y = order(x,y)
         maximoX, maximoY, minimoX, minimoY = norm01(x,y)
@@ -240,12 +233,10 @@ def processing_relationdata3(sinais, sinalizadores, gravacoes, path_data, path_s
         x = pd.DataFrame()
         y = pd.DataFrame()
         z = pd.DataFrame()
-        j=0
         for i in range(0, 1950,13):
           x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
           y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
           z = pd.concat([z, dadosBody10[i+2]-dadosBody[i+2][3]], axis=1)
-          j+=1
 
         x,y,z = order3(x,y,z)
         maximoX, maximoY, maximoZ, minimoX, minimoY, minimoZ = norm01_3(x,y,z)
@@ -276,13 +267,11 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
         # pegando os valores de x e y
         x = pd.DataFrame()
         y = pd.DataFrame()
-        j=0
 
         for i in range(0, 1950,13):
           # np.random.normal(loc=dadosBody[i][3], scale=0.05, size=1): loc=valor médio, scale=desviopadrao, size=numero de pontos
           x = pd.concat([x, dadosBody10[i]-(dadosBody[i][3]+np.random.normal(loc=dadosBody[i][3], scale=0.05, size=1))], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
           y = pd.concat([y, dadosBody10[i+1]-(dadosBody[i+1][3]+np.random.normal(loc=dadosBody[i+1][3], scale=0.05, size=1))], axis=1)
-          j+=1
 
         x,y = order(x,y)
         maximoX, maximoY, minimoX, minimoY = norm01(x,y)
