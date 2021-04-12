@@ -59,7 +59,7 @@ def generate_train_test(matriz_path, lista_sinalizadores, numsinalizador='1', fo
   labeltrain = []
 
   if form == 'sinalizador':
-      lista_pontos = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+      #lista_pontos = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
       lista_sinalizadores = [str(int) for int in lista_sinalizadores] 
       matrizPaths = os.listdir(matriz_path) #nome dos arquivos
       for matriz in matrizPaths: #Exemplo: '10-15Maca_3.npy'
@@ -70,7 +70,8 @@ def generate_train_test(matriz_path, lista_sinalizadores, numsinalizador='1', fo
         label = label.replace('.npy', '') #Exemplo: 'Maca'
         if (matriz.split('-')[0] == numsinalizador): 
             labeltest.append(label)
-            datatest.append(mat[lista_pontos])
+            #datatest.append(mat[lista_pontos])
+            datatest.append(mat)
         else:
           if (matriz.split('-')[0] in lista_sinalizadores):
             labeltrain.append(label)
