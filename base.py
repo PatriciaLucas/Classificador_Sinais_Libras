@@ -22,6 +22,31 @@ def order(x,y):
 
   return x,y
 
+def order3(x,y,z):
+  # ordenando os índices dos dataframes
+  order1 = x.reset_index()
+  order1 = order1.drop(columns="index")
+  order2 = order1.T
+  order2 = order2.reset_index()
+  x = order2.drop(columns="index")
+  x = x.T
+
+  order1 = y.reset_index()
+  order1 = order1.drop(columns="index")
+  order2 = order1.T
+  order2 = order2.reset_index()
+  y = order2.drop(columns="index")
+  y = y.T
+
+  order1 = z.reset_index()
+  order1 = order1.drop(columns="index")
+  order2 = order1.T
+  order2 = order2.reset_index()
+  z = order2.drop(columns="index")
+  z = z.T
+
+  return x,y,z
+
 def norm01(x,y):
   # normalizacao 0-1
   xBody = x.describe().loc[['max']]
@@ -36,6 +61,25 @@ def norm01(x,y):
 
   return maximoX, maximoY, minimoX, minimoY
 
+def norm01_3(x,y,z):
+  # normalizacao 0-1
+  xBody = x.describe().loc[['max']]
+  maximoX = xBody.T.max()
+  yBody = y.describe().loc[['max']]
+  maximoY = yBody.T.max()
+  zBody = z.describe().loc[['max']]
+  maximoZ = zBody.T.max()
+
+  xBody = x.describe().loc[['min']]
+  minimoX = xBody.T.min()
+  yBody = y.describe().loc[['min']]
+  minimoY = yBody.T.min()
+  zBody = z.describe().loc[['min']]
+  minimoZ = zBody.T.min()
+
+  return maximoX, maximoY, maximoZ, minimoX, minimoY, minimoZ
+
+
 def matriznorm(x, y, maximoX, maximoY, minimoX, minimoY):
   df_normX = (x - float(minimoX)) / (float(maximoX) - float(minimoX))
   df_normY = (y - float(minimoY)) / (float(maximoY) - float(minimoY))
@@ -43,6 +87,16 @@ def matriznorm(x, y, maximoX, maximoY, minimoX, minimoY):
   df_normX,df_normY = order(df_normX,df_normY)
 
   matriz = df_normX.append(df_normY) 
+  return matriz
+
+def matriznorm3(x, y, z, maximoX, maximoY, maximoZ, minimoX, minimoY, minimoZ):
+  df_normX = (x - float(minimoX)) / (float(maximoX) - float(minimoX))
+  df_normY = (y - float(minimoY)) / (float(maximoY) - float(minimoY))
+  df_normZ = (z - float(minimoZ)) / (float(maximoZ) - float(minimoZ))
+
+  df_normX,df_normY,df_normZ = order3(df_normX,df_normY,df_normZ)
+
+  matriz = df_normX.append(df_normY.append(df_normZ)) 
   return matriz
 
 def processing_normsigndata(sinais, sinalizadores, gravacoes, path_data, path_save):
@@ -160,6 +214,42 @@ def processing_relationdata(sinais, sinalizadores, gravacoes, path_data, path_sa
         x,y = order(x,y)
         maximoX, maximoY, minimoX, minimoY = norm01(x,y)
         matriz = matriznorm(x, y, maximoX, maximoY, minimoX, minimoY)
+        np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
+  return matriz
+
+def processing_relationdata3(sinais, sinalizadores, gravacoes, path_data, path_save):
+  """
+  Gera amostras de série temporais multivariadas com as coordenadas dos pontos relativos ao ponto da cabeca
+  :parametro sinais, sinalizadores e gravacoes: formam o nome dos arquivos que serao utilizados  
+  :parametro path_data: caminho dos dados que serao transfomados
+  :parametro path_save: onde a matriz sera salva
+  :return: série multivariadas dos dados relativos
+  """
+  for sinalizador in sinalizadores:
+    num_sinalizador = sinalizadores.index(sinalizador)+1
+    for sinal in sinais:
+      for gravacao in gravacoes:
+        arquivo = path_data + sinalizador + '/' + sinal + '/' + str(num_sinalizador) + '-' + sinal + '_' + gravacao + 'Body.txt'
+        
+        dadosBody = pd.read_csv(arquivo, header=None, delimiter=r"\s+") # lendo o arquivo
+        dadosBody = pd.DataFrame.transpose(dadosBody)
+        dadosBody17 = dadosBody.drop(dadosBody.index[[12,13,14,15,16,17,18,19]]) # excluindo pontos que foram inferidos, mas nao foram capturados pelo kinect
+        dadosBody10 = dadosBody17.drop(dadosBody17.index[[0,1,2,3,4,8,12]]) # excluindo pontos que nao apresentaram movimento durante a execucao dos sinais
+
+        # pegando os valores de x e y
+        x = pd.DataFrame()
+        y = pd.DataFrame()
+        z = pd.DataFrame()
+        j=0
+        for i in range(0, 1950,13):
+          x = pd.concat([x, dadosBody10[i]-dadosBody[i][3]], axis=1) # dadosBody[i][3]: ponto relativo a cabeca
+          y = pd.concat([y, dadosBody10[i+1]-dadosBody[i+1][3]], axis=1)
+          z = pd.concat([z, dadosBody10[i+2]-dadosBody[i+2][3]], axis=1)
+          j+=1
+
+        x,y,z = order3(x,y,z)
+        maximoX, maximoY, maximoZ, minimoX, minimoY, minimoZ = norm01_3(x,y,z)
+        matriz = matriznorm3(x, y, z, maximoX, maximoY, maximoZ, minimoX, minimoY, minimoZ)
         np.save(path_save + str(num_sinalizador) + '-' + sinal + '_' + gravacao + '.npy', matriz)
   return matriz
 
