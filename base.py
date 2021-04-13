@@ -370,7 +370,7 @@ def rolling_average(matrix, lag):
   :parametro lag: número de atrasos usados para a média móvel
   :return: série multivariadas suavizadas pela média móvel, índices das classes da nova matriz
   """
-  sample = np.zeros((20, 150))
+  sample = np.zeros((30, 150))
   matrix_samples = matrix
   for point in range(matrix.shape[0]):
       dataset = pd.DataFrame({'Point':matrix[point][:]})
