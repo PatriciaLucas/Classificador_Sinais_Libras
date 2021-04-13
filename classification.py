@@ -76,7 +76,7 @@ def generate_train_test(matriz_path, lista_sinalizadores, numsinalizador='1', fo
           if (matriz.split('-')[0] in lista_sinalizadores):
             labeltrain.append(label)
             #datatest.append(mat[lista_pontos])
-            datatest.append(mat)
+            datatrain.append(mat)
 
       lb = LabelBinarizer()
       y_train = lb.fit_transform(labeltrain)
