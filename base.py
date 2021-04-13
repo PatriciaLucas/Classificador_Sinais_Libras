@@ -282,7 +282,7 @@ def processing_noisedata(sinais, sinalizadores, gravacoes, path_data, path_save)
 def window_warp(x):
     # https://halshs.archives-ouvertes.fr/halshs-01357973/document
     window_ratio=0.01
-    scales=[0, 30]
+    scales=[0, 20]
     x = np.swapaxes(x, 1, 2)
     warp_scales = np.random.choice(scales, x.shape[0])
     warp_size = np.ceil(window_ratio*x.shape[1]).astype(int)
