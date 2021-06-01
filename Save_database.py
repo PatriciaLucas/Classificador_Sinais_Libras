@@ -105,8 +105,8 @@ def individual(X_train, y_train, X_test, y_test):
   #model = compiled_tcn(return_sequences=False,num_feat=150,num_classes=20,nb_filters=32,kernel_size=5,dilations=[2 ** i for i in range(2)],
                        #padding='causal',dropout_rate=0,use_batch_norm=True,nb_stacks=1,max_len=X_train[0:1].shape[1],opt='adam',
                        #use_skip_connections=True)
-  model = compiled_tcn(return_sequences=False,num_feat=150,num_classes=20,nb_filters=32,kernel_size=20,dilations=[2 ** i for i in range(9)],
-                       padding='causal',dropout_rate=0.1,use_batch_norm=True,nb_stacks=2,max_len=X_train[0:1].shape[1],opt='adam',
+  model = compiled_tcn(return_sequences=False,num_feat=150,num_classes=20,nb_filters=16,kernel_size=11,dilations=[2 ** i for i in range(3)],
+                       padding='causal',dropout_rate=0,use_batch_norm=True,nb_stacks=1,max_len=X_train[0:1].shape[1],opt='adam',
                        use_skip_connections=True)
   history = model.fit(X_train, y_train, epochs=100, workers=4, use_multiprocessing=True, verbose=0)
   yhat = model.predict(X_test).squeeze().argmax(axis=1)
