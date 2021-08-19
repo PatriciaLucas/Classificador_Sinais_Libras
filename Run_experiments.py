@@ -6,7 +6,6 @@ from sklearn.utils import shuffle
 import random
 from sklearn.model_selection import train_test_split
 from tcn import compiled_tcn
-from tcn import TCN
 from keras.callbacks import EarlyStopping
 
 
