@@ -4,10 +4,6 @@ import sqlite3
 import contextlib
 from sklearn.utils import shuffle
 import random
-from sklearn.model_selection import train_test_split
-from tcn import compiled_tcn
-from keras.callbacks import EarlyStopping
-
 
 #Função para executar INSERT INTO
 def execute_insert(sql,data,database_path):
@@ -47,6 +43,7 @@ def train_test_split_sinalizador(matriz, sinais, sinalizadores, sinalizador):
     return X_train, X_test, y_train, y_test
 
 def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, num_feat, num_classes, nb_filters, kernel_size, dilations, dropout_rate, nb_stacks, num_sinalizadores=12, form='sinalizador'):
+  from sklearn.model_selection import train_test_split
   import time
   execute("CREATE TABLE IF NOT EXISTS results(experiment TEXT, sinalizador TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, tempo FLOAT, y_hat BLOB, y_test BLOB)",database_path)
   list_sinalizadores = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
@@ -82,6 +79,7 @@ def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, num_
   return
 
 def individual(X_train, y_train, X_test, y_test, num_feat, num_classes, nb_filters, kernel_size, dilations, dropout_rate, nb_stacks):
+  from keras.callbacks import EarlyStopping  
   from tcn import compiled_tcn
   from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
   call = [EarlyStopping(monitor='loss', mode='min', patience=15, verbose=1),]
