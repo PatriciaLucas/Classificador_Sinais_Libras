@@ -1,15 +1,4 @@
-import numpy as np
-import pandas as pd
-import sqlite3
-import contextlib
-from sklearn.utils import shuffle
-import random
-from sklearn.model_selection import train_test_split
-from tcn import compiled_tcn
-from tcn import TCN
-from keras.callbacks import EarlyStopping
-
-
+#Função para executar INSERT INTO
 def execute_insert(sql,data,database_path):
     """
     Função para executar INSERT INTO
@@ -38,8 +27,8 @@ def execute(sql,database_path):
                 return cursor.fetchall()
 
 def train_test_split_sinalizador(matriz, sinais, sinalizadores, sinalizador):
-    index1 = np.argwhere(sinalizadores == sinalizador)
-    index2 = np.argwhere(sinalizadores != sinalizador)
+    index1 = np.where(sinalizadores == str(sinalizador))
+    index2 = np.where(sinalizadores != str(sinalizador))
     X_train = np.delete(matriz, index1, axis=0)
     y_train = np.delete(sinais, index1)
     X_test = np.delete(matriz, index2, axis=0)
