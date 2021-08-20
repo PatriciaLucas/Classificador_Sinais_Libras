@@ -62,7 +62,7 @@ def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, data
                                                                            f1, tempo, yhat.tostring(), y_test.tostring()),database_path)
       else:
         l = []
-        X_train, X_test, y_train, y_test = train_test_split(matriz, sinais, test_size=0.025)
+        X_train, X_test, y_train, y_test = train_test_split(matriz, sinais, test_size=0.025, random_state=42)
         X_train, y_train = shuffle(X_train, y_train)
         X_test, y_test = shuffle(X_test, y_test)
         X_train = np.concatenate((X_train, X_test[:20]), axis=0)
