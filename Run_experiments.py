@@ -42,11 +42,11 @@ def train_test_split_sinalizador(matriz, sinais, sinalizadores, sinalizador):
     y_test = np.delete(sinais, index2)
     return X_train, X_test, y_train, y_test
 
-def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, database_path, num_feat, num_classes, nb_filters, kernel_size, dilations, dropout_rate, nb_stacks, num_sinalizadores=12, form='sinalizador'):
+def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, database_path, num_feat, num_classes, nb_filters, kernel_size, dilations, dropout_rate, nb_stacks, total_sinalizadores = None, num_sinalizadores = None, form='sinalizador'):
   from sklearn.model_selection import train_test_split
   import time
   execute("CREATE TABLE IF NOT EXISTS results(experiment TEXT, sinalizador TEXT, accuracy FLOAT, precision FLOAT, recall FLOAT, f1 FLOAT, tempo FLOAT, y_hat BLOB, y_test BLOB)",database_path)
-  list_sinalizadores = sorted(random.sample(np.arange(1,12+1).tolist(),num_sinalizadores))
+  list_sinalizadores = sorted(random.sample(np.arange(1,total_sinalizadores+1).tolist(),num_sinalizadores))
   for exec in range(num_execute):
       if form == 'sinalizador':
         for sinalizador in list_sinalizadores:
