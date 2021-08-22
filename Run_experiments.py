@@ -71,7 +71,7 @@ def experiment(matriz, sinais, sinalizadores, name_experiment, num_execute, data
             X_test = X_test[20:]
             y_test = y_test[20:]
         else:
-            X_train, X_test, y_train, y_test = train_test_split(matriz, sinais, test_size=0.025, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(matriz, sinais, test_size=0.05, random_state=42)
             X_train, y_train = shuffle(X_train, y_train)
             X_test, y_test = shuffle(X_test, y_test)
             X_train = np.concatenate((X_train, X_test[:12]), axis=0)
